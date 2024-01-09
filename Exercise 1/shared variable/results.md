@@ -10,3 +10,4 @@ When using 1 processor instead of 2, we get a result of 0 since the two threads 
 
 Sharing a variable, but properly it workds
 ---------------------
+We used mutex since this ensures that only one thread can access a resource at a time.
