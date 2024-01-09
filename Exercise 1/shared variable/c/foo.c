@@ -4,13 +4,16 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <semaphore.h>
-int i = 0;
-sem_t sem;
+int i = -1;
+pthread_mutex_t lock;
+
 // Note the return type: void*
 void* incrementingThreadFunction(){
     // TODO: increment i 1_000_000 times
     for (int j = 0; j < 1000000; j++) {
+        pthread_mutex_lock(&lock);
         i++;
+        pthread_mutex_unlock(&lock);
     }
     return NULL;
 }
@@ -18,7 +21,9 @@ void* incrementingThreadFunction(){
 void* decrementingThreadFunction(){
     // TODO: decrement i 1_000_000 times
         for (int j = 0; j < 1000000; j++) {
-        i--;ema
+        pthread_mutex_lock(&lock);
+        i--;
+        pthread_mutex_unlock(&lock);
     }
     return NULL;
 }
@@ -29,10 +34,12 @@ int main(){
     // start the two functions as their own threads using `pthread_create`
     // Hint: search the web! Maybe try "pthread_create example"?
     
-    pthread_t inc_thread = {0};
-    pthread_t dec_thread = {0};
+    pthread_mutex_init(&lock, NULL);
+
+    pthread_t inc_thread;
+    pthread_t dec_thread;
     pthread_create(&inc_thread, NULL, incrementingThreadFunction, NULL);
-    pthread_create(&inc_thread, NULL, decrementingThreadFunction, NULL);
+    pthread_create(&dec_thread, NULL, decrementingThreadFunction, NULL);
 
     // TODO:
     // wait for the two threads to be done before printing the final result
@@ -40,6 +47,7 @@ int main(){
     
     pthread_join(inc_thread, NULL);
     pthread_join(dec_thread, NULL);
+    pthread_mutex_destroy(&lock);
 
 
     printf("The magic number is: %d\n", i);
