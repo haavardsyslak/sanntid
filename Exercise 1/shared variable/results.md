@@ -8,5 +8,5 @@ When running the code, we get a random number each time since the two threads tr
 runtime.GOMAXPROCS() defines how many processors we should use.
 When using 1 processor instead of 2, we get a result of 0 since the two threads alternates in incrementing and decrementing the variable.
 
-Sharing a variable, but properly
+Sharing a variable, but properly it workds
 ---------------------
