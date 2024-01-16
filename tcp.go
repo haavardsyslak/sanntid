@@ -12,18 +12,13 @@ const (
 	FIXED_PORT = 33546
 )
 
-var ch chan string
-
 func main() {
-	ch = make(chan string)
+	ch := make(chan string)
 	go RecieveTCP("10.100.23.22", 20012)
 	conn := Connect("10.100.23.129:33546")
 
 	defer conn.Close()
-	for {
-		time.Sleep(1 * time.Second)
-		conn.Write(append([]byte("asdfsd"), 0))
-	}
+	<-ch
 
 }
 
@@ -32,9 +27,8 @@ func Connect(addr string) net.Conn {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(address.IP, address.Port, address.Zone)
+
 	conn, err := net.DialTCP("tcp", nil, address)
-	fmt.Print("Dial...")
 
 	if err != nil {
 		log.Fatal(err)
@@ -64,7 +58,7 @@ func RecieveTCP(address string, port int) {
 
 	for {
 		conn, err := l.Accept()
-		go aa(conn)
+		go Ping(conn)
 		if err != err {
 			log.Fatal(err)
 		}
@@ -78,31 +72,16 @@ func RecieveTCP(address string, port int) {
 					fmt.Println("err: ", err)
 				}
 				fmt.Println("msg: ", msg)
-				//port := msg[len(msg)-7 : len(msg)-2]
-				//fmt.Println(port)
-				//ch <- port
+
 			}
-			// ip := fmt.Sprintf("10.100.23.129:%s", port)
-			// fmt.Println(ip)
-			// conn, err := net.Dial("tcp", ip)
-			// if err != nil {
-			// 	log.Fatal(err)
-			// }
-			// reader = bufio.NewReader(conn)
-			// for {
-			// 	msg, err := reader.ReadString('\000')
-			// 	if err != nil {
-			// 		fmt.Println("err: ", err)
-			// 	}
-			// 	fmt.Println("msg: ", msg)
-			// }
+
 		}(conn)
 	}
 }
 
-func aa(c net.Conn) {
+func Ping(c net.Conn) {
 	for {
 		time.Sleep(1 * time.Second)
-		c.Write(append([]byte("asdfsd"), 0))
+		c.Write([]byte("Ping\000"))
 	}
 }
