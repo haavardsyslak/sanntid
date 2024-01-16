@@ -15,12 +15,12 @@ const (
 
 func main() {
 
-	server_addr := net.UDPAddr{
+	addr := net.UDPAddr{
 		Port: 20012,
 		IP:   net.ParseIP("10.100.23.22"),
 	}
 
-	go RecieveUDP(server_addr)
+	go RecieveUDP(addr)
 	go TransmittUDP("10.100.23.129:20012")
 
 	ch := make(chan int)
