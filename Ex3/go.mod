@@ -1,6 +1,7 @@
-module ex3
+module lab3
 
-go 1.20
+go 1.21.5
 
 require Driver-go v0.0.0
-replace Driver-go => ./driver-go
+replace Driver-go => ./driver-go/
+
